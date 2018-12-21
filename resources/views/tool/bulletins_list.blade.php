@@ -1,5 +1,6 @@
 @extends('layouts.app') @section('js')
 <script src="{{ URL::asset('asset/js/toolControllers.js') }}"></script>
+
 @stop @section('content')
 <div class="">
     <div class="page-title">
@@ -18,16 +19,18 @@
         <div class="x_panel">
 
             <div class="x_title">
-                <button id="admin_add" class="btn btn-primary" type="button" data-toggle="modal" data-target="#add" data-id="">
-					<i class="fa fa-plus"></i> {{ trans('lang.add_btn') }}
-				</button>
+                <!-- <button id="admin_add" class="btn btn-primary" type="button" data-toggle="modal" data-target="#add" data-id=""> -->
+                    <a href="/tool/bulletins/add">
+                        <button id="admin_add" class="btn btn-primary" type="button">
+					       <i class="fa fa-plus"></i> {{ trans('lang.add_btn') }}
+                        </button>
+                    </a>
                 <div class="clearfix"></div>
             </div>
 
 
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <!-- add list start-->
-                @include('tool.bulletins_add')
                 <!-- add list end -->
                 <div class="table-responsive">
                     <table class="table table-striped jambo_table bulk_action">
@@ -61,10 +64,15 @@
 							</td>
                             <td align="center">
                                 <!--修改 刪除按鈕 S-->
-                                <button type="button" class="btn btn-default bulletins_edit" data-toggle="modal" data-target="#edit_Modal" data-id="{{ $datas->id }}" data-title="{{ $datas->title }}"
+                                <!-- <button type="button" class="btn btn-default bulletins_edit" data-toggle="modal" data-target="#edit_Modal" data-id="{{ $datas->id }}" data-title="{{ $datas->title }}"
                                     data-type_id="{{ $datas->type_id }}" data-start_time="{{ $datas->start_time }}" data-end_time="{{ $datas->end_time }}" data-content="{{ $datas->content }}"
                                     data-created_at="{{ $datas->created_at }}" data-updated_at="{{ $datas->updated_at }}" data-sort="{{ $datas->sort }}"><em class="fa fa-pencil"></em>
+                                </button> -->
+
+                                <a href="/tool/bulletins/edit?id={{ $datas->id }}">
+                                <button type="button" class="btn btn-default bulletins_edit" ><em class="fa fa-pencil"></em>
                                 </button>
+                                </a>
                                 <!--修改 刪除按鈕 END-->
                             </td>
                             <td class="center">
@@ -136,7 +144,7 @@
         <div class="form-group">
         <label for="input_content" class="col-sm-2 control-label">公告內容</label>
         <div class="col-sm-10">
-          <textarea class="form-control" rows="10"  id="input_content" name="content" required></textarea>
+          <textarea style="height: 600px" class="form-control" rows="100"  id="input_edit_content" name="content" required></textarea>
         </div>
         </div>
             </div>
@@ -172,6 +180,7 @@
         modal.find(".modal-body textarea[name='content']").val(button.data('content'))
         modal.find(".modal-body input[name='start_time']").val(button.data('start_time'))
         modal.find(".modal-body input[name='end_time']").val(button.data('end_time'))
+
     })
     /*
         //選擇日期
@@ -181,7 +190,9 @@
           minDate:new Date(),//預設顯示現在時間
         });
     */
+
     //自設-日期選擇
+    /*
     $('#single_cala').daterangepicker({
         singleDatePicker: true,
         timePicker: true,
@@ -201,6 +212,8 @@
         },
         startDate: "{{ date("Y-m-d") }} 23:59:59"
     });
+    */
+
     //載入完後執行
     $(function() {
         //活動編輯器=>刪除

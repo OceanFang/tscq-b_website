@@ -166,6 +166,13 @@ return [
         Mews\Captcha\CaptchaServiceProvider::class,
 
         Barryvdh\DomPDF\ServiceProvider::class,
+
+        //CKEditor Package
+        Unisharp\Ckeditor\ServiceProvider::class,
+
+        //Laravel file manager
+        UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -217,6 +224,9 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
+
+        //Laravel file manager
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

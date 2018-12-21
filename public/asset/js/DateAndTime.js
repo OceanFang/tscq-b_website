@@ -34,7 +34,9 @@ function initime()
 {
     $('input[name="start_time"],input[name="end_time"]').flatpickr({
         enableTime: true,
-        dateFormat: "Y-m-d H:i:S"
+        dateFormat: "Y-m-d H:i:S",
+        allowInput: true,
+        minDate: "today",
     });
 }
 

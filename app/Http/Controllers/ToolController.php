@@ -186,14 +186,35 @@ class ToolController extends Controller
     //公告編輯器->新增
     public function bulletins_add(Request $request)
     {
+        $roleServ = new RoleService();
+        $techAdmin = $roleServ->ifAPAdmin(); //取得$techAdmin
+        $menuName = new MenuName(); //選單相關
+        $method = 'bulletins_add';
+        $title = $menuName->getName($method); //取得選單標題
+
+        $list = DB::connection('mysql4')->table('bulletin_types')->get();
+
+        return view('tool.bulletins_add', ['title' => $title, 'list' => $list]);
+
+    }
+
+    //公告編輯器->執行新增
+    public function do_bulletins_add(Request $request)
+    {
         $error = 0;
         $p = $request->input();
 
         foreach ($p as $key => $v) {
+
+            if ($key == 'content'):
+                $p[$key] = str_replace(env('SUB_NAME') . '-b', env('SUB_NAME'), $v);
+            endif;
+
             if (empty($v)) {
                 $error = 1;
             }
         }
+
         //檢查
         if ($error) {
             $a = '<script> alert("你有欄位空白");
@@ -217,7 +238,27 @@ class ToolController extends Controller
     }
 
     //公告編輯器->編輯
-    public function bulletins_editok(Request $request)
+    public function bulletins_edit(Request $request)
+    {
+        $roleServ = new RoleService();
+        $techAdmin = $roleServ->ifAPAdmin(); //取得$techAdmin
+        $menuName = new MenuName(); //選單相關
+        $method = 'bulletins';
+        $title = $menuName->getName($method); //取得選單標題
+        $data = DB::connection('mysql4')->table('bulletins')->where('id', $request->id)->first();
+
+        $list = DB::connection('mysql4')->table('bulletin_types')->get();
+
+        if ($request->id) {
+            return view('tool.bulletins_edit', ['title' => $title, 'data' => $data, 'list' => $list]);
+        } else {
+            echo '缺少參數';
+            exit;
+        }
+    }
+
+    //公告編輯器->執行編輯
+    public function do_bulletins_edit(Request $request)
     {
         $error = 0;
         $roleServ = new RoleService();
@@ -228,11 +269,18 @@ class ToolController extends Controller
         if ($request->q == 'edit') {
             //return "送出修改";
             $p = $request->input();
+
             foreach ($p as $key => $v) {
+
+                if ($key == 'content'):
+                    $p[$key] = str_replace(env('SUB_NAME') . '-b', env('SUB_NAME'), $v);
+                endif;
+
                 if (empty($v)) {
                     $error = 1;
                 }
             }
+
             //檢查
             if ($error) {
                 $a = '<script> alert("你有欄位空白");
