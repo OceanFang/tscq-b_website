@@ -4,8 +4,8 @@
 <style>
     /*圖片大小*/
     .img-w240 {
-        width: 240px;
-        height: 140px;
+        width: 50%;
+        height: 50%;
     }
 </style>
 <div class="">

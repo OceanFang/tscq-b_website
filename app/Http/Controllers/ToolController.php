@@ -40,6 +40,7 @@ class ToolController extends Controller
             return redirect('error');
         }
     }
+
     //banner編輯器->新增
     public function banner_add(Request $request)
     {
@@ -57,10 +58,10 @@ class ToolController extends Controller
     }
 
     //banner編輯器->編輯-入資料
-    public function banner_editok(Request $request)
+    public function banner_edit(Request $request)
     {
         //dd($request);
-        if ($this->toolService->banner_editok($request) == true) {
+        if ($this->toolService->banner_edit($request) == true) {
             $content = '已儲存成功';
         } else {
             $content = '儲存失敗';
@@ -84,13 +85,14 @@ class ToolController extends Controller
             return 'error';
         }
     }
+
     //banner編輯器->排序
     public function banner_ajax(Request $request)
     {
         $this->toolService->banner_ajax($request->data);
     }
 
-    //banner編輯器->顯示
+    //launcher banner編輯器->顯示
     public function launcher_banner(Request $request)
     {
 
@@ -110,7 +112,8 @@ class ToolController extends Controller
             return redirect('error');
         }
     }
-    //banner編輯器->新增
+
+    //launcher banner編輯器->新增
     public function launcher_banner_add(Request $request)
     {
         $p = $request->input();
@@ -126,11 +129,11 @@ class ToolController extends Controller
         </script>";
     }
 
-    //banner編輯器->編輯-入資料
-    public function launcher_banner_editok(Request $request)
+    //launcher banner編輯器->編輯-入資料
+    public function launcher_banner_edit(Request $request)
     {
         //dd($request);
-        if ($this->toolService->launcher_banner_editok($request) == true) {
+        if ($this->toolService->launcher_banner_edit($request) == true) {
             $content = '已儲存成功';
         } else {
             $content = '儲存失敗';
@@ -144,7 +147,7 @@ class ToolController extends Controller
         return $r;
     }
 
-    //banner編輯器->刪除
+    //launcher banner編輯器->刪除
     public function launcher_banner_delete(Request $request)
     {
         if (app('super') === true) {
@@ -154,10 +157,81 @@ class ToolController extends Controller
             return 'error';
         }
     }
-    //banner編輯器->排序
+    //launcher banner編輯器->排序
     public function launcher_banner_ajax(Request $request)
     {
         $this->toolService->launcher_banner_ajax($request->data);
+    }
+
+    //ingame banner編輯器->顯示
+    public function ingame_banner(Request $request)
+    {
+
+        //有權限
+        if (app('super') === true) {
+            $roleServ = new RoleService();
+            $techAdmin = $roleServ->ifAPAdmin(); //取得$techAdmin
+            $menuName = new MenuName(); //選單相關
+            $method = 'ingame_banner';
+            $title = $menuName->getName($method); //取得選單標題
+            $data = DB::connection('mysql4')->table('ingame_event_banners')->orderBy('sort')->get();
+
+            //撈資料
+            return view('tool.ingame_banner_list', ['title' => $title, 'data' => $data]);
+        } else {
+            // 若無此權限則顯示提醒頁面
+            return redirect('error');
+        }
+    }
+
+    //ingame banner編輯器->新增
+    public function ingame_banner_add(Request $request)
+    {
+        $p = $request->input();
+        if ($this->toolService->ingame_banner_add($p) == true) {
+            $content = '已儲存成功';
+        } else {
+            $content = '儲存失敗';
+        }
+        $to_url = '/tool/ingame/banner';
+        echo "<script>
+                    alert('$content');
+                    window.location ='$to_url';
+        </script>";
+    }
+
+    //ingame banner編輯器->編輯-入資料
+    public function ingame_banner_edit(Request $request)
+    {
+        //dd($request);
+        if ($this->toolService->ingame_banner_edit($request) == true) {
+            $content = '已儲存成功';
+        } else {
+            $content = '儲存失敗';
+        }
+        $to_url = '/tool/ingame/banner'; //返回頁
+        $r = "<script>
+                    alert('$content');
+                    window.location ='$to_url';
+                </script>";
+
+        return $r;
+    }
+
+    //ingame banner編輯器->刪除
+    public function ingame_banner_delete(Request $request)
+    {
+        if (app('super') === true) {
+            $res = $this->toolService->ingame_banner_delete($request->id);
+        } else {
+            // 若無此權限則顯示提醒頁面
+            return 'error';
+        }
+    }
+    //ingame banner編輯器->排序
+    public function ingame_banner_ajax(Request $request)
+    {
+        $this->toolService->ingame_banner_ajax($request->data);
     }
 
     /**
@@ -286,7 +360,7 @@ class ToolController extends Controller
                 $a = '<script> alert("你有欄位空白");
                     </script>';
             } else {
-                if ($this->toolService->bulletins_editok($request->id, $p) == true) {
+                if ($this->toolService->bulletins_edit($request->id, $p) == true) {
                     $content = '已儲存成功';
                     //return redirect('tool/bulletins');
                 } else {

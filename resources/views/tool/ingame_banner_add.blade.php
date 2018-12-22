@@ -1,16 +1,15 @@
-<div class="modal fade" id="edit_Modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="add" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
-                <span class="modal-title" style="font-weight:bold;font-size:18pt;">{{ trans('lang.modify_btn') }}</span>
+                <span class="modal-title" style="font-weight:bold;font-size:18pt;">{{ trans('lang.add_btn') }}</span>
             </div>
-            <form class="form-horizontal" role="form" method="POST" action="/tool/launcher/banner/edit">
+            <form class="form-horizontal" role="form" method="POST" action="/tool/ingame/banner/add">
                 <div class="modal-body">
-                <input type="hidden" name="id" value="">
-                {{ csrf_field() }}
+                    {{ csrf_field() }}
                     <div class="form-group">
                         <label for="input_button" class="col-sm-2 control-label">活動時間</label>
                         <fieldset>

@@ -7,7 +7,7 @@
 			</button>
                 <span class="modal-title" style="font-weight:bold;font-size:18pt;">{{ trans('lang.modify_btn') }}</span>
             </div>
-            <form class="form-horizontal" role="form" method="POST" action="/tool/banner/editok">
+            <form class="form-horizontal" role="form" method="POST" action="/tool/banner/edit">
                 <div class="modal-body">
                 <input type="hidden" name="id" value="">
                 {{ csrf_field() }}
