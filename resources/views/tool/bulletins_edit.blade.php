@@ -51,6 +51,7 @@ $(function(){
 <form class="form-horizontal" role="form" method="POST" action="/tool/bulletins/do_edit">
 <input type="hidden" name="q" value="edit">
 <input type="hidden" name="id" value="{{ $data->id }}">
+<input type="hidden" name="game" value="{{ $game }}">
 {{ csrf_field() }}
  <div class="modal-body">
 
@@ -110,7 +111,7 @@ $(function(){
 				!! 注意 ，若選擇已有群組的人員則將會取代原本的設定 !!
 			</div>-->
 			<button type="submit" class="btn btn-primary">送出</button>
-			<a href="/tool/bulletins">
+			<a href="/tool/bulletins/{{ $game }}">
 				<button type="button" class="btn btn-secondary">取消</button>
 			</a>
 		</div>

@@ -20,7 +20,7 @@
 
             <div class="x_title">
                 <!-- <button id="admin_add" class="btn btn-primary" type="button" data-toggle="modal" data-target="#add" data-id=""> -->
-                    <a href="/tool/bulletins/add">
+                    <a href="/tool/bulletins/add/{{ $game }}">
                         <button id="admin_add" class="btn btn-primary" type="button">
 					       <i class="fa fa-plus"></i> {{ trans('lang.add_btn') }}
                         </button>
@@ -28,66 +28,137 @@
                 <div class="clearfix"></div>
             </div>
 
+            <div class="x_content">
+            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                    <?php $count = 0;?>
 
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <!-- add list start-->
-                <!-- add list end -->
-                <div class="table-responsive">
-                    <table class="table table-striped jambo_table bulk_action">
+                    @foreach($list as $k => $val)
+                    <li role="presentation" class="{{$count==0? 'active' : ''}}"><a href="#tab_content{{$val->id}}" id="home-tab" role="tab" data-toggle="tab">{{ $val->short }}</a>
+                    </li>
+                    <?php $count++;?>
+                    @endforeach
+                </ul>
 
+                <div id="myTabContent" class="tab-content">
+                    <?php $count = 0;?>
+                    @foreach($list as $k => $type)
+                    <div role="tabpanel" class="tab-pane fade {{$count==0? 'active in' : ''}}" id="tab_content{{$type->id}}" aria-labelledby="home-tab">
+                      <?php $count++;?>
 
-                        <thead>
-                            <tr class="headings">
-                                <th class="text-center">id</th>
-                                <th class="text-center">類型</th>
-                                <th class="text-center">{{ trans('lang.theme') }}</th>
-                                <th class="text-center">{{ trans('lang.bulletins') }} {{ trans('lang.time') }}</th>
-                                <th class="text-center">拖拉可{{ trans('lang.change_the_position') }}</th>
-                                <th class="text-center">{{ trans('lang.operating') }}</th>
-                                <th class="column-title">
-                                    <span class="btn btn-round btn-danger btn_del_all"><em class="fa fa-trash"></em></span>
-                                    <input type="checkbox" name="DelALL" style="position: absolute; zoom: 1.8;" value="ALL">
-                                </th>
-                            </tr>
-                        </thead>
-                        @foreach($data as $datas)
-                        <tr class="data" draggable="true">
-                            <td align="center" class="id">{{$datas->id}}</td>
-                            <td>{{$datas->short}}</td>
-                            <td>{{$datas->title}}</td>
-                            <td align="center">
-                                {{$datas->start_time." ~ ".$datas->end_time}}
-							</td>
-							<!--拖拉可更動位置-->
-							<td align="center">
-								<i class="fa fa-arrows"></i>
-							</td>
-                            <td align="center">
-                                <!--修改 刪除按鈕 S-->
-                                <!-- <button type="button" class="btn btn-default bulletins_edit" data-toggle="modal" data-target="#edit_Modal" data-id="{{ $datas->id }}" data-title="{{ $datas->title }}"
-                                    data-type_id="{{ $datas->type_id }}" data-start_time="{{ $datas->start_time }}" data-end_time="{{ $datas->end_time }}" data-content="{{ $datas->content }}"
-                                    data-created_at="{{ $datas->created_at }}" data-updated_at="{{ $datas->updated_at }}" data-sort="{{ $datas->sort }}"><em class="fa fa-pencil"></em>
-                                </button> -->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <!-- add list start-->
+                            <!-- add list end -->
+                            <div class="table-responsive">
+                                <table class="table table-striped jambo_table bulk_action">
+                                    <thead>
+                                        <tr class="headings">
+                                            <th class="text-center">id</th>
+                                            <th class="text-center">{{ trans('lang.theme') }}</th>
+                                            <th class="text-center">{{ trans('lang.bulletins') }} {{ trans('lang.time') }}</th>
+                                            <th class="text-center">狀態</th>
+                                            <th class="text-center">拖拉可{{ trans('lang.change_the_position') }}</th>
+                                            <th class="text-center">{{ trans('lang.operating') }}</th>
+                                            <th class="column-title">
+                                                <span class="btn btn-round btn-danger btn_del_all"><em class="fa fa-trash"></em></span>
+                                                <input type="checkbox" name="DelALL" style="position: absolute; zoom: 1.8;" value="ALL">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    @if (array_key_exists($type->id, $a_data))
+                                    @foreach($a_data[$type->id] as $datas)
+                                    <tr class="data" draggable="true">
+                                        <td align="center" class="id">{{$datas->id}}</td>
+                                        <td>{{$datas->title}}</td>
+                                        <td align="center">
+                                            {{$datas->start_time." ~ ".$datas->end_time}}
+                                        </td>
+                                        <td>
+                                            @if (date('Y-m-d H:i:s') > $datas->start_time && date('Y-m-d H:i:s') < $datas->end_time)
+                                            <span class="label label-success">執行中</span>
+                                            @else
+                                            <span class="label label-danger">未生效</span>
+                                            @endif
+                                        </td>
+                                        <!--拖拉可更動位置-->
+                                        <td align="center">
+                                            <i class="fa fa-arrows"></i>
+                                        </td>
+                                        <td align="center">
+                                            <!--修改 刪除按鈕 S-->
+                                            <!-- <button type="button" class="btn btn-default bulletins_edit" data-toggle="modal" data-target="#edit_Modal" data-id="{{ $datas->id }}" data-title="{{ $datas->title }}"
+                                                data-type_id="{{ $datas->type_id }}" data-start_time="{{ $datas->start_time }}" data-end_time="{{ $datas->end_time }}" data-content="{{ $datas->content }}"
+                                                data-created_at="{{ $datas->created_at }}" data-updated_at="{{ $datas->updated_at }}" data-sort="{{ $datas->sort }}"><em class="fa fa-pencil"></em>
+                                            </button> -->
 
-                                <a href="/tool/bulletins/edit?id={{ $datas->id }}">
-                                <button type="button" class="btn btn-default bulletins_edit" ><em class="fa fa-pencil"></em>
-                                </button>
-                                </a>
-                                <!--修改 刪除按鈕 END-->
-                            </td>
-                            <td class="center">
-                                <span class="btn btn-round btn-danger bulletins_del" data-id="{{ $datas->id }}"><em class="fa fa-trash"></em></span>
-                                <input type="checkbox" name="Del[]" style="position: absolute; zoom: 1.8;" data-id="{{$datas->id}}">
-                            </td>
+                                            <a href="/tool/bulletins/edit/{{ $game }}?id={{ $datas->id }}">
+                                            <button type="button" class="btn btn-default bulletins_edit" ><em class="fa fa-pencil"></em>
+                                            </button>
+                                            </a>
+                                            <!--修改 刪除按鈕 END-->
+                                        </td>
+                                        <td class="center">
+                                            <span class="btn btn-round btn-danger bulletins_del" data-id="{{ $datas->id }}"><em class="fa fa-trash"></em></span>
+                                            <input type="checkbox" name="Del[]" style="position: absolute; zoom: 1.8;" data-id="{{$datas->id}}">
+                                        </td>
 
-                            <td class="sort text-center" style="display:none">{{$datas->sort}}</td>
-                        </tr>
-                        @endforeach
-                    </table>
-                    <!--內容 END-->
+                                        <td class="sort text-center" style="display:none">{{$datas->sort}}</td>
+                                    </tr>
+                                    @endforeach
+                                    @endif
+
+                                    @if (array_key_exists($type->id, $i_data))
+                                    @foreach($i_data[$type->id] as $datas)
+                                    <tr class="data" draggable="true">
+                                        <td align="center" class="id">{{$datas->id}}</td>
+                                        <td>{{$datas->title}}</td>
+                                        <td align="center">
+                                            {{$datas->start_time." ~ ".$datas->end_time}}
+                                        </td>
+                                        <td>
+                                            @if (date('Y-m-d H:i:s') > $datas->start_time && date('Y-m-d H:i:s') < $datas->end_time)
+                                            <span class="label label-success">執行中</span>
+                                            @else
+                                            <span class="label label-danger">未生效</span>
+                                            @endif
+                                        </td>
+                                        <!--拖拉可更動位置-->
+                                        <td align="center">
+                                            <i class="fa fa-arrows"></i>
+                                        </td>
+                                        <td align="center">
+                                            <!--修改 刪除按鈕 S-->
+                                            <!-- <button type="button" class="btn btn-default bulletins_edit" data-toggle="modal" data-target="#edit_Modal" data-id="{{ $datas->id }}" data-title="{{ $datas->title }}"
+                                                data-type_id="{{ $datas->type_id }}" data-start_time="{{ $datas->start_time }}" data-end_time="{{ $datas->end_time }}" data-content="{{ $datas->content }}"
+                                                data-created_at="{{ $datas->created_at }}" data-updated_at="{{ $datas->updated_at }}" data-sort="{{ $datas->sort }}"><em class="fa fa-pencil"></em>
+                                            </button> -->
+
+                                            <a href="/tool/bulletins/edit/{{ $game }}?id={{ $datas->id }}">
+                                            <button type="button" class="btn btn-default bulletins_edit" ><em class="fa fa-pencil"></em>
+                                            </button>
+                                            </a>
+                                            <!--修改 刪除按鈕 END-->
+                                        </td>
+                                        <td class="center">
+                                            <span class="btn btn-round btn-danger bulletins_del" data-id="{{ $datas->id }}"><em class="fa fa-trash"></em></span>
+                                            <input type="checkbox" name="Del[]" style="position: absolute; zoom: 1.8;" data-id="{{$datas->id}}">
+                                        </td>
+
+                                        <td class="sort text-center" style="display:none">{{$datas->sort}}</td>
+                                    </tr>
+                                    @endforeach
+                                    @endif
+                                </table>
+                                <!--內容 END-->
+                            </div>
+
+                        </div>
+                    </div>
+                    @endforeach
+
                 </div>
 
-            </div>
+
         </div>
     </div>
     <div class="modal fade" id="edit_Modal" tabindex="-1" aria-hidden="true">

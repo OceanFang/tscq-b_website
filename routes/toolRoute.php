@@ -20,13 +20,13 @@ Route::group(['prefix' => 'tool', 'middleware' => ['auth', 'request.log']], func
     Route::get('ingame/banner/delete', 'ToolController@ingame_banner_delete');
     Route::get('ingame/banner/ajax', 'ToolController@ingame_banner_ajax');
 
-    Route::get('bulletins', 'ToolController@bulletins');
-    Route::get('bulletins/add', 'ToolController@bulletins_add');
-    Route::post('bulletins/do_add', 'ToolController@do_bulletins_add');
-    Route::get('bulletins/edit', 'ToolController@bulletins_edit');
     Route::post('bulletins/do_edit', 'ToolController@do_bulletins_edit');
     Route::get('bulletins/delete', 'ToolController@bulletins_delete');
     Route::get('bulletins/ajax', 'ToolController@bulletins_ajax');
+    Route::post('bulletins/do_add', 'ToolController@do_bulletins_add');
+    Route::get('bulletins/{game}', 'ToolController@bulletins');
+    Route::get('bulletins/add/{game}', 'ToolController@bulletins_add');
+    Route::get('bulletins/edit/{game}', 'ToolController@bulletins_edit');
 
     Route::get('imageUpload', 'UploadController@imageIndex');
     Route::get('upload/addParent/{type}', 'UploadController@addParent');

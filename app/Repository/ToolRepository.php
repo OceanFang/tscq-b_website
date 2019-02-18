@@ -6,6 +6,8 @@ use App\Banner; //banner
 use App\Bulletin; //公告
 use App\IngameEventBanner; //launcher banner
 use App\LauncherBanner;
+use DB;
+
 //ingame banner
 
 class ToolRepository extends CoreRepository
@@ -140,6 +142,7 @@ class ToolRepository extends CoreRepository
 
         return $r;
     }
+
     //ingame banner編輯器->刪除
     public function ingame_banner_delete($id)
     {
@@ -148,6 +151,7 @@ class ToolRepository extends CoreRepository
 
         return $del;
     }
+
     //ingame banner燈編輯器->排序
     public function ingame_banner_ajax($data)
     {
@@ -160,19 +164,23 @@ class ToolRepository extends CoreRepository
     public function bulletins_add($request)
     {
 
+        Bulletin::where('game', $request['game'])->update(['sort' => DB::raw('sort + 1')]);
+
         $obj = new Bulletin();
+        $obj->game = $request['game'];
         $obj->start_time = $request['start_time'];
         $obj->end_time = $request['end_time'];
         $obj->type_id = $request['type_id'];
         $obj->title = $request['title'];
         $obj->content = $request['content'];
         //先查
-        $sort = Bulletin::orderBy('sort', 'desc')->value('sort'); //取得1個值
-        $obj->sort = $sort + 1;
+        // $sort = Bulletin::orderBy('sort', 'desc')->value('sort'); //取得1個值
+        // $obj->sort = $sort + 1;
         $r = $obj->save();
 
         return $r;
     }
+
     //公告編輯器->編輯
     public function bulletins_edit($id, $request)
     {
@@ -186,6 +194,7 @@ class ToolRepository extends CoreRepository
 
         return $r;
     }
+
     //公告編輯器->刪除
     public function bulletins_delete($id)
     {
@@ -194,6 +203,7 @@ class ToolRepository extends CoreRepository
 
         return $del;
     }
+
     //公告編輯器->排序
     public function bulletins_ajax($data)
     {

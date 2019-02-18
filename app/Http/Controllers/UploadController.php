@@ -92,24 +92,25 @@ class UploadController extends Controller
                 $file_name = $file->getClientOriginalName();
                 $re_file_name = date("YmdHi") . '_' . $file_name;
 
-                $destination_path = public_path() . '/asset/image/';
+                $destination_path = public_path() . '/asset/image/' . $request->path;
 
                 if ($request->hasFile('file')):
                     $file->move($destination_path, $re_file_name);
                 endif;
 
-                $data = array(
-                    'method' => 'upload',
-                    'path' => $event_path,
-                    'file' => curl_file_create($destination_path . $re_file_name),
-                    'name' => urlencode($re_file_name),
-                );
+                // $data = array(
+                //     'method' => 'upload',
+                //     'path' => $event_path,
+                //     'file' => curl_file_create($destination_path . $re_file_name),
+                //     'name' => urlencode($re_file_name),
+                // );
 
-                $res = $this->api_curl($this->url, $data);
+                // $res = $this->api_curl($this->url, $data);
+                $res = 'Upload Success.';
 
                 if ($res == 'Upload Success.'):
                     $this->up->insImageSub($request->parentId, $event_path, $re_file_name);
-                    unlink($destination_path . '/' . $re_file_name);
+                    // unlink($destination_path . '/' . $re_file_name);
                     $msg = '上傳成功。';
                 else:
                     $msg = '上傳失敗。';

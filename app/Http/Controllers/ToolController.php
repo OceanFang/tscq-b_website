@@ -7,6 +7,7 @@ use App\Library\MenuName; //權限
 use App\Services\RoleService; //資料庫
 use App\Services\ToolService;
 //服務
+use Carbon\Carbon;
 use DB; //跟權限檢查有關
 use Illuminate\Http\Request; //接收參數必須
 use Illuminate\Support\Facades\Redirect;
@@ -246,11 +247,27 @@ class ToolController extends Controller
             $menuName = new MenuName(); //選單相關
             $method = 'bulletins';
             $title = $menuName->getName($method); //取得選單標題
-            $data = DB::connection('mysql4')->table('bulletins as b')->selectRaw('b.*, t.short')->leftjoin('bulletin_types as t', 'b.type_id', '=', 't.id')->orderBy('sort')->orderBy('created_at', 'DESC')->get();
-            // dd($data);
-            $list = DB::connection('mysql4')->table('bulletin_types')->get();
+            $game = $request->game;
+
+            // $data = DB::connection('mysql4')->table('bulletins as b')->selectRaw('b.*, t.short')->leftjoin('bulletin_types as t', 'b.type_id', '=', 't.id')->orderBy('sort')->orderBy('created_at', 'DESC')->get();
+            $a_data = $i_data = $a_id_arr = [];
+
+            $active_data = DB::connection('mysql4')->table('bulletins as b')->where('game', $game)->where('start_time', '<=', Carbon::now())->where('end_time', '>=', Carbon::now())->orderBy('sort')->orderBy('created_at', 'DESC')->get();
+
+            foreach ($active_data as $key => $value) {
+                $a_data[$value->type_id][] = $value;
+                $a_id_arr[] = $value->id;
+            }
+
+            $invalid_data = DB::connection('mysql4')->table('bulletins as b')->where('game', $game)->whereNotIn('id', $a_id_arr)->orderBy('sort')->orderBy('created_at', 'DESC')->get();
+
+            foreach ($invalid_data as $key => $value) {
+                $i_data[$value->type_id][] = $value;
+            }
+
+            $list = DB::connection('mysql4')->table('bulletin_types')->where('game', $game)->get();
             //撈資料
-            return view('tool.bulletins_list', ['title' => $title, 'data' => $data, 'list' => $list]);
+            return view('tool.bulletins_list', ['title' => $title, 'game' => $game, 'a_data' => $a_data, 'i_data' => $i_data, 'list' => $list]);
         } else {
             // 若無此權限則顯示提醒頁面
             return redirect('error');
@@ -265,10 +282,11 @@ class ToolController extends Controller
         $menuName = new MenuName(); //選單相關
         $method = 'bulletins_add';
         $title = $menuName->getName($method); //取得選單標題
+        $game = $request->game;
 
-        $list = DB::connection('mysql4')->table('bulletin_types')->get();
+        $list = DB::connection('mysql4')->table('bulletin_types')->where('game', $game)->get();
 
-        return view('tool.bulletins_add', ['title' => $title, 'list' => $list]);
+        return view('tool.bulletins_add', ['title' => $title, 'game' => $game, 'list' => $list]);
 
     }
 
@@ -281,7 +299,7 @@ class ToolController extends Controller
         foreach ($p as $key => $v) {
 
             if ($key == 'content'):
-                $p[$key] = str_replace(env('SUB_NAME') . '-b', env('SUB_NAME'), $v);
+                $p[$key] = str_replace(env('SUB_NAME') . '-b', $request->game, $v);
             endif;
 
             if (empty($v)) {
@@ -303,7 +321,7 @@ class ToolController extends Controller
             } else {
                 $content = '儲存失敗';
             }
-            $to_url = '/tool/bulletins';
+            $to_url = '/tool/bulletins/' . $request->game;
             echo "<script>
                 alert('$content');
                 window.location ='$to_url';
@@ -319,12 +337,14 @@ class ToolController extends Controller
         $menuName = new MenuName(); //選單相關
         $method = 'bulletins';
         $title = $menuName->getName($method); //取得選單標題
+        $game = $request->game;
+
         $data = DB::connection('mysql4')->table('bulletins')->where('id', $request->id)->first();
 
-        $list = DB::connection('mysql4')->table('bulletin_types')->get();
+        $list = DB::connection('mysql4')->table('bulletin_types')->where('game', $game)->get();
 
         if ($request->id) {
-            return view('tool.bulletins_edit', ['title' => $title, 'data' => $data, 'list' => $list]);
+            return view('tool.bulletins_edit', ['title' => $title, 'game' => $game, 'data' => $data, 'list' => $list]);
         } else {
             echo '缺少參數';
             exit;
@@ -347,7 +367,7 @@ class ToolController extends Controller
             foreach ($p as $key => $v) {
 
                 if ($key == 'content'):
-                    $p[$key] = str_replace(env('SUB_NAME') . '-b', env('SUB_NAME'), $v);
+                    $p[$key] = str_replace(env('SUB_NAME') . '-b', $request->game, $v);
                 endif;
 
                 if (empty($v)) {
@@ -366,7 +386,7 @@ class ToolController extends Controller
                 } else {
                     $content = '儲存失敗';
                 }
-                $to_url = '/tool/bulletins';
+                $to_url = '/tool/bulletins/' . $request->game;
                 echo "<script>
                         alert('$content');
                         window.location ='$to_url';

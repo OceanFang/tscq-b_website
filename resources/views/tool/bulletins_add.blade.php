@@ -52,6 +52,7 @@ $(function(){
  	<div class="form-group">
     <label for="input_button" class="col-sm-2 control-label">公告時間</label>
 
+	<input type="hidden" name="game" value="{{ $game }}">
 	<fieldset>
 		<!-- 日期 -->
 		<div class="col-sm-6 xdisplay_inputx form-group has-feedback">
@@ -102,7 +103,7 @@ $(function(){
 				!! 注意 ，若選擇已有群組的人員則將會取代原本的設定 !!
 			</div>-->
 			<button type="submit" class="btn btn-primary">送出</button>
-			<a href="/tool/bulletins">
+			<a href="/tool/bulletins/{{ $game }}">
 				<button type="button" class="btn btn-secondary">取消</button>
 			</a>
 		</div>

@@ -49,7 +49,7 @@ return [
     'login_firefox' => 'Firefox',
 
     /* 首頁 -左側menu */
-    'web_name' => '吞噬蒼穹官網後台',
+    'web_name' => '官網後台',
     'home' => '首頁',
     'backhome' => '返回首頁',
 
@@ -70,7 +70,7 @@ return [
     'autopass' => '自動創建密碼',
     'msg_create' => '註冊成功後會寄送帳號密碼到您的email。',
     'mail_error' => '此信箱已註冊',
-    'mail_title2' => '吞噬蒼穹官網後台創建帳號成功通知信',
+    'mail_title2' => '官網後台創建帳號成功通知信',
     'mail_create_success' => '創建帳號成功',
     'alert_account_internal_name' => '請填寫姓名',
     'alert_account_internal_name_length' => '姓名長度不可超過255字元',
