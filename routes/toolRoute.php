@@ -28,6 +28,14 @@ Route::group(['prefix' => 'tool', 'middleware' => ['auth', 'request.log']], func
     Route::get('bulletins/add/{game}', 'ToolController@bulletins_add');
     Route::get('bulletins/edit/{game}', 'ToolController@bulletins_edit');
 
+    Route::post('events/do_edit', 'ToolController@do_events_edit');
+    Route::get('events/delete', 'ToolController@events_delete');
+    Route::get('events/ajax', 'ToolController@events_ajax');
+    Route::post('events/do_add', 'ToolController@do_events_add');
+    Route::get('events/{game}', 'ToolController@events');
+    Route::get('events/add/{game}', 'ToolController@events_add');
+    Route::get('events/edit/{game}', 'ToolController@events_edit');
+
     Route::get('imageUpload', 'UploadController@imageIndex');
     Route::get('upload/addParent/{type}', 'UploadController@addParent');
     Route::post('imageUpload/act', 'UploadController@imageUpload');

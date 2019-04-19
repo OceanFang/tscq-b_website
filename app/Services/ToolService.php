@@ -111,4 +111,21 @@ class ToolService
         return $this->tr->bulletins_ajax($data);
     }
 
+    //events編輯器->新增
+    public function events_add($request)
+    {
+        return $this->tr->events_add($request);
+    }
+
+    //events編輯器->編輯
+    public function events_edit($id, $request)
+    {
+        return $this->tr->events_edit($id, $request);
+    }
+
+    //events編輯器->刪除
+    public function events_delete($id)
+    {
+        return $this->tr->events_delete($id);
+    }
 }

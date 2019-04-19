@@ -4,7 +4,8 @@ namespace App\Repository;
 
 use App\Banner; //banner
 use App\Bulletin; //公告
-use App\IngameEventBanner; //launcher banner
+use App\EventFbPainting; //launcher banner
+use App\IngameEventBanner;
 use App\LauncherBanner;
 use DB;
 
@@ -211,6 +212,47 @@ class ToolRepository extends CoreRepository
         foreach ($data as $key => $value) {
             Bulletin::where('id', $value)->update(['sort' => $key]); // 更新所有資料排序
         }
+    }
+
+    //events編輯器->新增
+    public function events_add($request)
+    {
+
+        $obj = new EventFbPainting();
+        $obj->game = $request['game'];
+        $obj->type_id = $request['type_id'];
+        $obj->img = $request['img'];
+        $obj->author = $request['author'];
+        $obj->title = $request['title'];
+        $obj->content = $request['content'];
+
+        $r = $obj->save();
+
+        return $r;
+    }
+
+    //events編輯器->編輯
+    public function events_edit($id, $request)
+    {
+        $obj = EventFbPainting::find($id);
+        $obj->game = $request['game'];
+        $obj->type_id = $request['type_id'];
+        $obj->img = $request['img'];
+        $obj->author = $request['author'];
+        $obj->title = $request['title'];
+        $obj->content = $request['content'];
+        $r = $obj->save();
+
+        return $r;
+    }
+
+    //events編輯器->刪除
+    public function events_delete($id)
+    {
+        $user_obj = EventFbPainting::find($id);
+        $del = $user_obj->delete();
+
+        return $del;
     }
 
     /**
